@@ -1,12 +1,36 @@
-public class User {
-    private String userId;
-    private String contactInfo;
+package model;
+import java.util.ArrayList;
+import java.util.List;
 
-    public User(String userId, String contactInfo) {
-        this.userId = userId;
+public class User {
+    private int userID;
+    private String contactInfo;
+    private List<Subscription> subList = new ArrayList<>();
+
+    public User(int userID, String contactInfo) {
+        this.userID = userID;
         this.contactInfo = contactInfo;
     }
 
-    public String getUserId() { return userId; }
-    public String getContactInfo() { return contactInfo; }
+    public void register(Subscription subscription) {
+        subList.add(subscription);
+    }
+
+    public void modifySubscription(int index, Subscription newSub) {
+        if (index >= 0 && index < subList.size()) {
+            subList.set(index, newSub);
+        }
+    }
+
+    public void cancelSubscription(Subscription sub) {
+        subList.remove(sub);
+    }
+
+    public String getContactInfo() {
+        return contactInfo;
+    }
+
+    public List<Subscription> getSubscriptions() {
+        return subList;
+    }
 }
