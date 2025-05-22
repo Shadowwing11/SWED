@@ -1,4 +1,4 @@
-ackage notification;
+package notification;
 
 import model.User;
 

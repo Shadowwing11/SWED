@@ -21,7 +21,7 @@ public class SystemController {
         }
     }
 
-    public void updateSubscription() {
+    public void updateSubscription(User user, int index, Subscription newSub) {
         List<Subscription> list = userSubscriptions.get(user);
         if (list != null && index >= 0 && index < list.size()) {
             list.set(index, newSub);
@@ -36,8 +36,10 @@ public class SystemController {
                 if (Math.random() > 0.5) { // Mock update check
                     NotificationChannel channel = switch (sub.getContactChannel().toLowerCase()) {
                         case "email" -> new EmailChannel();
+                        case "sms" -> new SMSChannel();
                         default -> new EmailChannel(); // fallback
                     };
+
                     Notification notification = new Notification("Update found on " + sub.getUrl(), channel);
                     notifyUser(user, notification);
                 }
@@ -45,3 +47,7 @@ public class SystemController {
         }
     }
 
+    public void notifyUser(User user, Notification notification) {
+        notification.deliverTo(user);
+    }
+}
