@@ -6,6 +6,8 @@ import observer.Observer;
 import observer.NotificationObserver;
 import observer.WebsiteMonitor;
 
+import strategy.*;
+
 import java.util.*;
 
 public class SystemController {
@@ -39,7 +41,10 @@ public class SystemController {
                 try {
                     String newContent = WebChecker.fetchWebsiteContent(sub.getUrl());
 
-                    WebsiteMonitor monitor = new WebsiteMonitor();
+                    // Choose comparison strategy — for demo use text comparison
+                    ComparisonStrategy strategy = new TextComparisonStrategy();
+                    WebsiteMonitor monitor = new WebsiteMonitor(strategy);
+
                     NotificationChannel channel = switch (sub.getContactChannel().toLowerCase()) {
                         case "email" -> new EmailChannel();
                         case "sms" -> new SMSChannel();
