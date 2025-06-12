@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class Subscription {
     private String url;
-    private String monitorFrequency;
+    private String monitorFrequency; //daily,hourly,weekly
     private String contactChannel;
     private Date lastChecked;
 

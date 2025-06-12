@@ -33,7 +33,7 @@ public class SystemController {
         for (Map.Entry<User, List<Subscription>> entry : userSubscriptions.entrySet()) {
             User user = entry.getKey();
             for (Subscription sub : entry.getValue()) {
-                if (Math.random() > 0.5) { // Mock update check
+                if (Math.random() > 0.5) { //update check
                     NotificationChannel channel = switch (sub.getContactChannel().toLowerCase()) {
                         case "email" -> new EmailChannel();
                         case "sms" -> new SMSChannel();
