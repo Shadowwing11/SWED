@@ -2,11 +2,14 @@ package controller;
 
 import model.*;
 import notification.*;
+import observer.Observer;
+import observer.NotificationObserver;
+import observer.WebsiteMonitor;
 
 import java.util.*;
 
 public class SystemController {
-    private Map<User, List<Subscription>> userSubscriptions = new HashMap<>();
+    private final Map<User, List<Subscription>> userSubscriptions = new HashMap<>();
 
     public void registerSubscription(User user, Subscription subscription) {
         user.register(subscription);
@@ -33,15 +36,22 @@ public class SystemController {
         for (Map.Entry<User, List<Subscription>> entry : userSubscriptions.entrySet()) {
             User user = entry.getKey();
             for (Subscription sub : entry.getValue()) {
-                if (Math.random() > 0.5) { //update check
+                try {
+                    String newContent = WebChecker.fetchWebsiteContent(sub.getUrl());
+
+                    WebsiteMonitor monitor = new WebsiteMonitor();
                     NotificationChannel channel = switch (sub.getContactChannel().toLowerCase()) {
                         case "email" -> new EmailChannel();
                         case "sms" -> new SMSChannel();
-                        default -> new EmailChannel(); // fallback
+                        default -> new EmailChannel();
                     };
 
-                    Notification notification = new Notification("Update found on " + sub.getUrl(), channel);
-                    notifyUser(user, notification);
+                    Observer observer = new NotificationObserver(user, channel);
+                    monitor.attach(observer);
+                    monitor.setContent(newContent);
+
+                } catch (Exception e) {
+                    System.out.println("Error fetching content for " + sub.getUrl() + ": " + e.getMessage());
                 }
             }
         }
